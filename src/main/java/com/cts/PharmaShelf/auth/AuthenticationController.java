@@ -28,14 +28,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @DeleteMapping("/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetails userDetails) {
-
-        System.out.println("Logout Functionality Called");
-        service.logout(userDetails.getUsername());
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/default") // Endpoint to create admin
     public ResponseEntity<?> createAdmin() {
         try {
@@ -48,17 +40,13 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String name) {
-        return ResponseEntity.ok(service.forgotPassword(name));
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetails userDetails) {
+
+        System.out.println("Logout Functionality Called");
+        service.logout(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(
-            @RequestParam String token,
-            @RequestParam String newPassword) {
-
-        return ResponseEntity.ok(service.resetPassword(token, newPassword));
-    }
 
 }

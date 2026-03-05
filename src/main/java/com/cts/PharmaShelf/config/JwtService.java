@@ -35,15 +35,20 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken (Map<String, Object> extraClaims, UserDetails userDetails) {
-        // Extracting role from UserDetails
-        String role = ((Customer) userDetails).getRole().name();
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
+    }
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+
+        Customer customer = (Customer) userDetails;  // cast to Customer
 
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .claim("role", role) // Adding role to the token
+                .setSubject(customer.getUsername())
+                .claim("role", customer.getRole().name())   // role claim
+                .claim("userId", customer.getId())          // user id claim
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (24 * 60 * 60 * 1000)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

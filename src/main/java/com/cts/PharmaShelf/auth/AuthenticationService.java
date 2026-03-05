@@ -80,11 +80,6 @@ public class AuthenticationService implements AuthService {
         tokenRepo.saveAll(validUserTokens);
     }
 
-    public void logout(String username) {
-        var user = customerRepo.findByName(username).orElseThrow();
-        revokeAllUserTokens(user);
-    }
-
     @Override
     public String createAdmin() {
         Optional<Customer> userExist = customerRepo.findByEmail("admin@gmail.com");
@@ -102,39 +97,8 @@ public class AuthenticationService implements AuthService {
         return "Admin registered successfully.";
     }
 
-    public String forgotPassword(String name) {
-
-        Customer user = customerRepo.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Username not found"));
-
-        String resetToken = UUID.randomUUID().toString();
-
-        user.setResetToken(resetToken);
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
-
-        customerRepo.save(user);
-
-        return "Use this token to reset password: " + resetToken;
-    }
-
-    public String resetPassword(String token, String newPassword) {
-
-        Customer user = customerRepo.findAll()
-                .stream()
-                .filter(u -> token.equals(u.getResetToken()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
-
-        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Token expired");
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetToken(null);
-        user.setResetTokenExpiry(null);
-
-        customerRepo.save(user);
-
-        return "Password reset successful";
+    public void logout(String username) {
+        var user = customerRepo.findByEmail(username).orElseThrow();
+        revokeAllUserTokens(user);
     }
 }

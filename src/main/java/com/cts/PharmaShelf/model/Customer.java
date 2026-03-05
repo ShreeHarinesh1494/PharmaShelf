@@ -26,8 +26,6 @@ public class Customer implements UserDetails {
     private String name;
     private String email;
     private String password;
-    private String resetToken;
-    private LocalDateTime resetTokenExpiry;
 
     @JsonBackReference
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

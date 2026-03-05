@@ -49,12 +49,12 @@ public class SecurityConfiguration {
                                 .maximumSessions(1)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout
-                        .logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler(logoutSuccessHandler)
-                );
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                ).logout(logout -> logout
+                .logoutUrl("http://34.234.35.144/api/v1/auth/logout")
+                .addLogoutHandler(logoutHandler)
+                .logoutSuccessHandler(logoutSuccessHandler)
+        );
 
         return http.build();
 

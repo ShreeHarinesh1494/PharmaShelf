@@ -18,6 +18,7 @@ public class Token {
 
     private String token;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
     private boolean revoked;
